@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import Webcam from "react-webcam";
 import { Button } from "rsuite";
+import { imageDb } from "../components/firebaseImage/config";
 
 const videoConstraints = {
   width: 540,
@@ -10,7 +11,7 @@ const videoConstraints = {
 const FACING_MODE_USER = "user";
 const FACING_MODE_ENVIRONMENT = "environment";
 
-const Camera = () => {
+const Camera = ({ data }) => {
   const webcamRef = useRef(null);
   const [url, setUrl] = React.useState(null);
   const [change, setChange] = React.useState(true);
@@ -29,8 +30,9 @@ const Camera = () => {
   const capturePhoto = React.useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setUrl(imageSrc);
+    data(imageSrc);
     setChange(false);
-  }, [webcamRef]);
+  }, [webcamRef, data]);
 
   // Handle media access
   const onUserMedia = (e) => {
@@ -40,6 +42,7 @@ const Camera = () => {
   // Handle refresh to retake the photo
   const handleRefresh = () => {
     setUrl(null);
+    data(null);
     setChange(true);
   };
 

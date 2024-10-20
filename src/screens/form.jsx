@@ -1,18 +1,37 @@
 import React, { useEffect, useState } from "react";
 import "rsuite/dist/rsuite.min.css";
+import { ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 
 import Location from "./location";
 import Camera from "./camera";
 
 import { Form, ButtonToolbar, Button } from "rsuite";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { imageDb } from "../components/firebaseImage/config";
 
 export default function FormComponent() {
   const [showCamera, setShowCamera] = useState(false);
   const [cameraPermission, setCameraPermission] = useState(false);
   const [locationPermission, setLocationPermission] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+
   const handleOpen = () => {
     setShowCamera(true);
+  };
+
+  const handleUploadImageFirebase = async () => {
+    try {
+      console.log("upload image to firebase", imageUrl);
+      const imgRef = ref(imageDb, `image/${v4()}`);
+      await uploadBytes(imgRef, imageUrl);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const getUrlImageFromCamera = async (url) => {
+    setImageUrl(url);
   };
 
   useEffect(() => {
@@ -67,7 +86,7 @@ export default function FormComponent() {
         <Form.Group controlId="camera">
           <Form.ControlLabel>Chụp hình</Form.ControlLabel>
           {showCamera && cameraPermission ?
-            <Camera />
+            <Camera data={getUrlImageFromCamera} />
           : <Button
               appearance="primary"
               color="green"
@@ -87,7 +106,6 @@ export default function FormComponent() {
           {cameraPermission && locationPermission ?
             <ButtonToolbar>
               <Button
-                appearance=""
                 size="lg"
                 style={{
                   backgroundColor: "#18bd5b",
@@ -95,6 +113,7 @@ export default function FormComponent() {
                   width: "140px",
                   padding: "10px 15px",
                 }}
+                onClick={() => handleUploadImageFirebase()}
               >
                 Gửi
               </Button>
