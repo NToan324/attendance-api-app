@@ -85,7 +85,7 @@ export default function FormComponent() {
           return;
         }
         const result = await formService(updateInfo);
-        if (result.errCode === 0) toast.success("Điểm danh thành công");
+        if (result.data.errCode === 0) toast.success("Điểm danh thành công");
         else toast.error("Điểm danh thất bại");
       }
     } catch (error) {
