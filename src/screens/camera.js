@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import Webcam from "react-webcam";
+
 import { Button } from "rsuite";
-import { imageDb } from "../components/firebaseImage/config";
 
 const videoConstraints = {
   width: 540,
@@ -30,7 +30,8 @@ const Camera = ({ data }) => {
   const capturePhoto = React.useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setUrl(imageSrc);
-    data(imageSrc);
+    const output = b64toBlob(imageSrc);
+    data(output);
     setChange(false);
   }, [webcamRef, data]);
 
@@ -44,6 +45,28 @@ const Camera = ({ data }) => {
     setUrl(null);
     data(null);
     setChange(true);
+  };
+
+  //Convert base64 to image
+  const b64toBlob = (b64Data, sliceSize = 512) => {
+    const base64String = b64Data.split(",")[1];
+    const byteCharacters = atob(base64String);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: "image/jpeg" });
+    return blob;
   };
 
   return (

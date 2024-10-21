@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { getPosition } from "rsuite/esm/DOMHelper";
 
-function Location() {
+function Location({ data }) {
   const [location, setLocation] = useState({});
 
   useEffect(() => {
-    async function getLocation() {
+    function getLocation() {
       try {
-        await navigator.geolocation.getCurrentPosition((position) => {
-          setLocation({
+        navigator.geolocation.getCurrentPosition((position) => {
+          const newLocation = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-          });
+          };
+          setLocation(newLocation);
+          data(newLocation);
         });
       } catch (error) {
         console.log(error);
@@ -19,8 +20,10 @@ function Location() {
     }
     getLocation();
   }, []);
+
+  console.log(location);
   return (
-    <div className="border flex flex-col bg-gray">
+    <div className="border fxxlex flex-col bg-gray">
       <div className="latitude flex ">
         <p className="bg-gray-dark px-5 py-2 w-28 text-center text-white">
           Vĩ độ
