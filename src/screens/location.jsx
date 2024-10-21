@@ -15,13 +15,12 @@ function Location({ data }) {
           data(newLocation);
         });
       } catch (error) {
-        console.log(error);
+        throw new Error(error);
       }
     }
     getLocation();
   }, []);
 
-  console.log(location);
   return (
     <div className="border fxxlex flex-col bg-gray">
       <div className="latitude flex ">

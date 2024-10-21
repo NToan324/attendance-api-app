@@ -59,7 +59,7 @@ export default function FormComponent() {
   const checkIsEmty = () => {
     for (const key in infoUser) {
       if (!infoUser[key]) {
-        console.log("missing", key);
+        alert(`Missing ${key}`);
         return true;
       }
     }
@@ -71,12 +71,12 @@ export default function FormComponent() {
       const updateInfo = await handleUploadImageFirebase();
       const isEmty = checkIsEmty();
       if (updateInfo.imageUrl === "") {
-        console.log("missing image");
+        alert("Missing image");
         return;
       }
       if (!isEmty) {
         const result = await formService(updateInfo);
-        console.log("submit", result);
+        alert(result);
       }
     } catch (error) {
       throw new Error(error);
