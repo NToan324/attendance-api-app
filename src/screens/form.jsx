@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "rsuite/dist/rsuite.min.css";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Location from "./location";
 import Camera from "./camera";
@@ -57,9 +59,16 @@ export default function FormComponent() {
   };
 
   const checkIsEmty = () => {
+    const listKey = [
+      { key: "fullName", value: "Họ và tên" },
+      { key: "studentCode", value: "Mã số sinh viên" },
+      { key: "code", value: "Mã điểm danh" },
+    ];
     for (const key in infoUser) {
       if (!infoUser[key]) {
-        alert(`Missing ${key}`);
+        toast.error(
+          `${listKey.find((item) => item.key === key).value} đang được bỏ trống`
+        );
         return true;
       }
     }
@@ -70,13 +79,14 @@ export default function FormComponent() {
     try {
       const updateInfo = await handleUploadImageFirebase();
       const isEmty = checkIsEmty();
-      if (updateInfo.imageUrl === "") {
-        alert("Missing image");
-        return;
-      }
       if (!isEmty) {
+        if (updateInfo.imageUrl === "") {
+          toast.error("Vui lòng chụp hình trước khi gửi");
+          return;
+        }
         const result = await formService(updateInfo);
-        alert(result);
+        if (result.errCode === 0) toast.success("Điểm danh thành công");
+        else toast.error("Điểm danh thất bại");
       }
     } catch (error) {
       throw new Error(error);
