@@ -175,25 +175,20 @@ export default function FormComponent() {
           <Location data={getLocationData} />
         </Form.Group>
         <Form.Group className="flex justify-center flex-wrap content-center border-t mt-5 p-10 custom-border-color">
-          {locationPermission ?
-            <ButtonToolbar>
-              <Button
-                size="lg"
-                style={{
-                  backgroundColor: "#18bd5b",
-                  color: "white",
-                  width: "140px",
-                  padding: "10px 15px",
-                }}
-                onClick={() => hanldeSubmit()}
-              >
-                Gửi
-              </Button>
-            </ButtonToolbar>
-          : <p className="text-center">
-              Vui lòng cho phép truy cập máy ảnh và vị trí!
-            </p>
-          }
+          <ButtonToolbar>
+            <Button
+              size="lg"
+              style={{
+                backgroundColor: "#18bd5b",
+                color: "white",
+                width: "140px",
+                padding: "10px 15px",
+              }}
+              onClick={() => hanldeSubmit()}
+            >
+              Gửi
+            </Button>
+          </ButtonToolbar>
         </Form.Group>
       </Form>
     </div>
